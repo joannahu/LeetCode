@@ -1,0 +1,33 @@
+//devide the string into two halves, the 1st's head/end == 2nd's head/end, then we can treat them together. 
+
+class Solution {
+public:
+    int strangePrinter(string s) {
+        int len = s.length();
+        if(len == 0) return 0; //avoid overflow of array
+        
+        //2-dimension array to save state, 1st for the start pos of the substr, 2nd for the end pos of the substr
+        int dp[len][len];
+        
+        //initial state
+        for(int i = 0; i < len; i++){
+            dp[i][i] = 1; //one letter always one turn
+        }
+        
+        //state transfer
+        for(int l = 1; l < len; l++){ //traverse length of substr from 2 to len 
+            for(int i = 0; i < len-l; i++){ //traverse the start pos of substr
+                dp[i][i+l] = l+1; //maximum possible turn
+                for(int j = i; j < i+l; j++){ //traverse the mid point of substr
+                    if(s[i]==s[j+1]){ //2nd substr's head can be treated during 1st substr's head
+                        dp[i][i+l] = min(dp[i][i+l], dp[i][j] + dp[j+1][i+l]-1);
+                    }
+                    else{
+                        dp[i][i+l] = min(dp[i][i+l], dp[i][j] + dp[j+1][i+l]);
+                    }
+                }
+            }
+        }
+    return dp[0][len-1];
+    }
+};
