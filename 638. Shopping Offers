@@ -1,0 +1,50 @@
+//a six-dimension arrayto save mimimum price of a certain need: six "for", too complex
+//solution: a mapping with the 1st element a array contains needs, 2nd element the minimum price. 
+
+class Solution {
+public:
+    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
+        map<vector<int>, int> dp;
+        vector<int> zeroNeeds(6,0);
+        cout << zeroNeeds[1];
+        dp.insert(pair<vector<int>, int>(zeroNeeds, 0));
+        
+        int nItem = price.size(); //number of items
+        if(nItem == 0) return 0;
+        
+        dfs(price, special, needs, dp);
+        return dp[needs];
+    }
+    
+    void dfs(vector<int>& price, vector<vector<int>>& special, vector<int>& needs, map<vector<int>, int> &dp){
+        dp[needs] = INT_MAX;
+        
+        for(int i = 0; i < special.size(); i++){
+            int j = 0;
+            for(; j < needs.size(); j++){
+                if(special[i][j] - needs[j] > 0) break;
+            }
+            if(j < needs.size()) continue; //coupon invalid
+            
+            //use coupon
+            vector<int> newNeeds;
+            for(j = 0; j < needs.size(); j++){
+                newNeeds.push_back(needs[j]-special[i][j]);
+            }
+            
+            //recursion
+            dfs(price, special, newNeeds, dp);
+            
+            //use the coupon
+            dp[needs] = min(dp[needs], dp[newNeeds] + special[i][needs.size()]);
+            
+        }
+        
+        //cann't use coupon or don't want to use coupon
+        int noCoupon = 0;
+        for(int j = 0; j < needs.size(); j++){
+            noCoupon += needs[j] * price[j];
+        } 
+        dp[needs] = min(dp[needs],noCoupon);
+    }
+};
