@@ -1,0 +1,36 @@
+/*假设n=5，那么以xxxx表示1到4的任意排，在某个位置加上5，有如下几种情况：
+xxxx5
+xxx5x
+xx5xx
+x5xxx
+5xxxx
+第一种情况xxxx5不会增加任何新的翻转对，而 xxx5x会新增加1个翻转对，xx5xx，x5xxx，5xxxx分别会增加2，3，4个翻转对。
+dp[n][k] = dp[n - 1][k] + dp[n - 1][k-1] + ... + dp[n - 1][k - n + 1]
+
+优化递推公式，我们可以用k+1代替k，得到：
+dp[n][k+1] = dp[n - 1][k+1] + dp[n - 1][k] + ... + dp[n - 1][k + 1 - n + 1]
+用第二个等式减去第一个等式可以得到：
+dp[n][k+1] = dp[n][k] + dp[n - 1][k+1] - dp[n - 1][k - n + 1]
+将k+1换回成k，可以得到：
+dp[n][k] = dp[n][k-1] + dp[n - 1][k] - dp[n - 1][k - n]
+注意：当k>=n的时候，最后一项的数组坐标才能为非负数，从而最后一项才有值
+*/
+
+class Solution {
+public:
+    int kInversePairs(int n, int k) {
+        const int M = 1000000007;
+        vector<vector<int>> dp(n + 1, vector<int>(k + 1, 0)); //state to save different kinds of array with n elements and k inverse pairs
+        dp[0][0] = 1;
+        for (int i = 1; i <= n; ++i) {
+            dp[i][0] = 1;
+            for (int j = 1; j <= k; ++j) {
+                dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % M;
+                if (j >= i) {
+                    dp[i][j] = (dp[i][j] - dp[i - 1][j - i] + M) % M;
+                }
+            }
+        }
+        return dp[n][k];
+    }
+};
