@@ -1,0 +1,32 @@
+
+class Solution {
+public:
+    int findCircleNum(vector<vector<int>>& M) {
+        vector<bool> flag(M.size(),false); //indicate whether the student has been checked
+        int result = 0; //firend circle number
+        if(M.size() == 0) return result;
+        
+        queue<int> q; //save the students to check next;
+        int idx;
+        
+        for(int i = 0; i < M.size(); i++){ //traverse all students
+            if(flag[i]) continue; //student already checked
+            
+            q.push(i);
+            flag[i] = true;
+            result++;
+            while(!q.empty()){
+                idx = q.front();
+                q.pop();
+                for(int j = 0; j < M[idx].size(); j++){
+                    if(M[idx][j]==0) continue; //not friends
+                    if(flag[j]) continue; //already in queue
+                    q.push(j);
+                    flag[j] = true;
+                }
+            }
+        }
+        
+        return result;
+    }
+};
