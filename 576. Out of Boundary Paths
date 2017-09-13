@@ -3,7 +3,7 @@ https://leetcode.com/problems/out-of-boundary-paths/description/
 class Solution {
 public:
     int findPaths(int m, int n, int N, int i, int j) {
-        if(N==0) return 0;
+        if(N==0) return 0; //check index to avoid overflow
         
         const int mod = 1000000007;
         int dp[m][n][N]; //number of paths at position m,n and within N steps
