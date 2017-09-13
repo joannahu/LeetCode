@@ -32,10 +32,10 @@ public:
                 newNeeds.push_back(needs[j]-special[i][j]);
             }
             
-            //recursion
+            //recursion to update dp after using coupon
             dfs(price, special, newNeeds, dp);
             
-            //use the coupon
+            //decide whether use this coupon
             dp[needs] = min(dp[needs], dp[newNeeds] + special[i][needs.size()]);
             
         }
