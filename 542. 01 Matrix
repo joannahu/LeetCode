@@ -1,0 +1,55 @@
+https://leetcode.com/problems/01-matrix/description/
+
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+        if(m == 0) return matrix;
+        int n = matrix[0].size();
+        
+        vector<vector<int>> result(m, vector<int>(n,10000));
+        queue<pair<int,int>> curQueue; //save the index to treat now
+        queue<pair<int,int>> nextQueue; //save the index to treat next
+        
+        
+        //find all zeros
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    curQueue.push(make_pair(i,j));
+                    result[i][j] = 0;
+                }
+            }
+        }
+        
+        int i, j, d = 1; //d is distance
+        while(!curQueue.empty()){
+            i = curQueue.front().first;
+            j = curQueue.front().second;
+            curQueue.pop();
+            
+            if(i > 0 && result[i-1][j] == 10000) {//up
+                nextQueue.push(make_pair(i-1,j)); 
+                result[i-1][j] = d;
+            }
+            if(i < m-1 && result[i+1][j] == 10000){//down
+                nextQueue.push(make_pair(i+1,j)); 
+                result[i+1][j] = d;
+            }
+            if(j > 0 && result[i][j-1] == 10000) {//left
+                nextQueue.push(make_pair(i,j-1)); 
+                result[i][j-1] = d;
+            }
+            if(j < n-1 && result[i][j+1] == 10000){ //right
+                nextQueue.push(make_pair(i,j+1));
+                result[i][j+1] = d;
+            } 
+            
+            if(curQueue.empty()){
+                swap(curQueue, nextQueue);
+                d++;
+            }
+        }
+        return result;
+    }
+};
