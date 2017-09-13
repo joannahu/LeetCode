@@ -40,7 +40,7 @@ public:
             
         }
         
-        //cann't use coupon or don't want to use coupon
+        //can't use coupon or don't want to use coupon
         int noCoupon = 0;
         for(int j = 0; j < needs.size(); j++){
             noCoupon += needs[j] * price[j];
