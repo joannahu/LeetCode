@@ -1,0 +1,52 @@
+class Solution {
+public:
+    int findPaths(int m, int n, int N, int i, int j) {
+        if(N==0) return 0;
+        
+        const int mod = 1000000007;
+        int dp[m][n][N]; //number of paths at position m,n and within N steps
+        
+        //initial state
+        for(int x = 0; x < m; x++){
+            for(int y = 0; y < n; y++){
+                dp[x][y][0] = 0;
+                if(x==0) dp[x][y][0]++;
+                if(x==m-1) dp[x][y][0]++;
+                if(y==0) dp[x][y][0]++;
+                if(y==n-1) dp[x][y][0]++;
+            }
+        }
+        
+        //state transfer
+        for(int k = 1; k < N; k++){ //transfer from small step to large
+            for(int x = 0; x < m; x++){
+                for(int y = 0; y < n; y++){
+                    dp[x][y][k] = 0;
+                    if(x>0) {
+                        dp[x][y][k] += dp[x-1][y][k-1];
+                    }
+                    if(x<m-1){
+                        dp[x][y][k] += dp[x+1][y][k-1];
+                        dp[x][y][k] %= mod; //int length:  -2^31(-2,147,483,648) ~  2^31-1(2,147,483,647), so mod after each add 
+                    }
+                    if(y>0) {
+                        dp[x][y][k] += dp[x][y-1][k-1];
+                        dp[x][y][k] %= mod;
+                    }
+                    if(y<n-1){
+                        dp[x][y][k] += dp[x][y+1][k-1];
+                        dp[x][y][k] %= mod;
+                    }
+                }
+            }
+        }
+        
+        int result = 0; 
+        for(int k = 0; k < N; k++){
+            result += dp[i][j][k];
+            result %= mod;
+        }
+        
+        return result;
+    }
+};
