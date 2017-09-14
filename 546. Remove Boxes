@@ -5,7 +5,7 @@ public:
     int removeBoxes(vector<int>& boxes) {
         int size = boxes.size(); 
         
-        int dp[100][100][100]={0};
+        int dp[100][100][100]={0}; //3 dimension: left, right, length of the number equals to the right number 
         return dfs(boxes, dp, 0, size-1, 0);
     }
     
