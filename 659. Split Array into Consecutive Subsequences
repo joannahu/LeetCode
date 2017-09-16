@@ -1,0 +1,59 @@
+https://leetcode.com/problems/split-array-into-consecutive-subsequences/description/
+
+//Add to old array until current element number is less than the previous
+
+class Solution {
+public:
+    bool isPossible(vector<int>& nums) {
+        //in order to avoid copying array each time, put them in a map first
+        unordered_map<int,int> unused; //unused number and its repeat number
+        for(int i = 0; i < nums.size(); i++){
+            unused[nums[i]]++;
+        }
+        
+        int length = 0;
+        int target = nums[0];
+        int mapHead = 0; //the smallest number in map
+        
+        while(!unused.empty()){ 
+            if(unused.find(target) == unused.end() || unused[target] == 0) { //not found in map
+                if(length > 0 && length < 3) return false;
+                else{ //start new subsequense
+                    length = 0;
+                    if(mapHead == 0){ //no new subsequence
+                        target++;
+                        if(target > nums[nums.size()-1]) return true;
+                    }
+                    else{
+                        target = mapHead;
+                        mapHead = 0;
+                    }
+                }
+            }
+            else{ //found in map
+                //add to old
+                if(length < 3
+                  || (unused.find(target-1) != unused.end() && unused[target]-1 >= unused[target-1])) //current more than the previous, add to old and new
+                {
+                    length++;
+                    unused[target]--;
+                    
+                    if(mapHead == 0 && unused[target]>0){
+                        mapHead = target;
+                    }
+                    target++;
+                }
+                else //current less than the previous, add only to new 
+                { 
+                    length = 0; //start new subsequence
+                    target = mapHead;
+                    mapHead = 0;
+                
+                }
+            }
+        }
+        
+        if(length < 3) return false;
+        return true;
+    }
+};
