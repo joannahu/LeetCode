@@ -1,0 +1,44 @@
+//ban the next opposite party member
+//cannot judge based on the quantity, it depends on the order, for example, "DRDRR", Dire win
+
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        int active_r = 0;
+        int n_ban_r = 0;
+        int active_d = 0;
+        int n_ban_d = 0;
+        string curStr = senate;
+        string nextStr = "";
+                
+        while(1){
+            for(int i = 0; i < curStr.length(); i++){
+                if(curStr[i] == 'R'){ //Radiant
+                    if(n_ban_d != 0){ //banned
+                        n_ban_d--;
+                    }
+                    else{
+                        n_ban_r++;
+                        nextStr += curStr[i];
+                    }
+                }
+                else{ //Dire
+                    if(n_ban_r != 0){ //banned
+                        n_ban_r--;
+                    }
+                    else{
+                        n_ban_d++;
+                        nextStr += curStr[i];
+                    }
+                }
+            }
+            
+            if(n_ban_d >= nextStr.length()) return "Dire";
+            if(n_ban_r >= nextStr.length()) return "Radiant";
+            
+            curStr = nextStr;
+            nextStr = "";
+        }
+
+    }
+};
